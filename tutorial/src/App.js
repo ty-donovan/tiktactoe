@@ -33,24 +33,31 @@ function Board({ xIsNext, squares, onPlay }) {
     status = "Next player: " + (xIsNext ? "X" : "O"); 
   }
 
+  const boardRows = [];
+
+  for (let i = 0; i < 3; i++) {
+    const squaresInRow = [];
+    for (let j = 0; j < 3; j++) {
+      let squareIndex = i * 3 + j;
+      squaresInRow.push(
+        <Square 
+          key={squareIndex}
+          value={squares[squareIndex]}
+          onSquareClick={() => handleClick(squareIndex)}
+        />
+      );
+    }
+    boardRows.push(
+      <div className="board-row" key={i}>
+        {squaresInRow}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)}/>
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)}/>
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)}/>
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)}/>
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)}/>
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)}/>
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)}/>
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
-      </div>
+      {boardRows}
     </>
   ); 
 }
@@ -93,7 +100,14 @@ export default function Game() {
 
   const moves = history.map((squares, move) => {
     let description;
-    if (move > 0) {
+    if (move === currentMove){
+      description = "You are on move " + move;
+      return (
+        <li key={move}>
+          <div>{description}</div>
+        </li>
+      );
+    } else if (move > 0) {
       description = "Go to move " + move;
     } else {
       description = "Go to game start";
@@ -112,7 +126,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <ul>{moves}</ul>
       </div>
     </div>
   );
