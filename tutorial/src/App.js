@@ -85,6 +85,7 @@ function calculateWinner(squares) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [isAscending, setIsAscending] = useState(true);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
@@ -96,6 +97,10 @@ export default function Game() {
 
   function jumpTo(nextMove) {
     setCurrentMove(nextMove);
+  }
+
+  function toggleMoveOrder() {
+    setIsAscending(!isAscending);
   }
 
   const moves = history.map((squares, move) => {
@@ -120,6 +125,13 @@ export default function Game() {
     );
   });
 
+  let toggleStatus = "Sort Descending";
+
+  if (!isAscending){
+    moves.reverse();
+    toggleStatus = "Sort Ascending"
+  }
+
   return (
     <div className="game">
       <div className="board">
@@ -127,6 +139,9 @@ export default function Game() {
       </div>
       <div className="game-info">
         <ul>{moves}</ul>
+        <button onClick={toggleMoveOrder}>
+          {toggleStatus}
+        </button>
       </div>
     </div>
   );
